@@ -1,0 +1,9 @@
+{
+    "network_ssid": "12311-RC",
+    "network_found": true,
+    "fetch_success_ch": true,
+    "fetch_success_dash": true,
+    "connect_isSuccess": true,
+    "disconnect_isSuccess": true,
+    "checkDevice_isOnline": true
+}
