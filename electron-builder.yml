@@ -14,11 +14,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: NerdsHardwareClient
-nsis:
-  artifactName: ${name}-${version}-setup.${ext}
-  shortcutName: ${productName}
-  uninstallDisplayName: ${productName}
-  createDesktopShortcut: always
+  extraFiles: adb/win32/**
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
@@ -27,8 +23,12 @@ mac:
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
+  extraFiles: adb/darwin/**
 dmg:
   artifactName: ${name}-${version}.${ext}
+msi:
+  artifactName: ${name}-${version}.${ext}
+  createDesktopShortcut: false
 linux:
   target:
     - AppImage
@@ -36,9 +36,7 @@ linux:
     - deb
   maintainer: electronjs.org
   category: Utility
+  extraFiles: adb/linux/**
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
-publish:
-  provider: generic
-  url: https://example.com/auto-updates

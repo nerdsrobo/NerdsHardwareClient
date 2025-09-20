@@ -2,6 +2,9 @@ import { exec } from "child_process";
 import { readFileSync } from "fs";
 import { TerminalRecord } from "./terminalApi";
 
+function getPathToExec() {
+    return "./adb/" + platform + "/platform-tools/";
+}
 
 let logger: (data: string) => void = (_data: string) => {};
 let isEmulator = false;
@@ -16,6 +19,8 @@ let callbackStatusFailed: () => void = () => {}
 
 let makeTerminalRecord: (terminalRecord: TerminalRecord) => void = (_terminalRecord: TerminalRecord) => {}
 
+let platform = "win32";
+
 export function connect(callback: (isSuccess: boolean) => void) {
     if ( isEmulator ) {
         const emulator = JSON.parse(readFileSync("./logs/emulator.json").toString());
@@ -24,8 +29,8 @@ export function connect(callback: (isSuccess: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb connect 192.168.43.1:5555", stdout: "(emulator) isSuccess: " + emulator.connect_isSuccess, isErr: !emulator.connect_isSuccess, isUser: false})
         return
     }
-    const cmd = "adb connect 192.168.43.1:5555"
-    exec("adb connect 192.168.43.1:5555", (stderr, stdout) => {
+    const cmd = getPathToExec() + "adb connect 192.168.43.1:5555"
+    exec(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stdout, isErr: stderr?.message ? true : false, isUser: false})
         console.log(stdout);
         console.log(stderr?.message);
@@ -42,8 +47,8 @@ export function disconnect(callback: (isSuccess: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb disconnect 192.168.43.1:5555", stdout: "(emulator) isSuccess: " + emulator.disconnect_isSuccess, isErr: !emulator.disconnect_isSuccess, isUser: false})
         return
     }
-    const cmd = "adb disconnect 192.168.43.1:5555"
-    exec("adb disconnect 192.168.43.1:5555", (stderr, stdout) => {
+    const cmd = getPathToExec() + "adb disconnect 192.168.43.1:5555"
+    exec(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stdout, isErr: stderr?.message ? true : false, isUser: false})
         console.log(stdout);
         console.log(stderr?.message);
@@ -60,8 +65,8 @@ export function checkDevice(callback: (isOnline: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb devices", stdout: "(emulator) isOnline: " + emulator.checkDevice_isOnline, isErr: false, isUser: false})
         return
     }
-    const cmd = "adb devices"
-    exec("adb devices", (stderr, stdout) => {
+    const cmd = getPathToExec() + "adb devices"
+    exec(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stdout, isErr: stderr?.message ? true : false, isUser: false})
         if ( stderr?.message ) {
             callback(false);
@@ -103,7 +108,8 @@ export function makeTryAutoconnectOutOfTurn() {
     makeTryAutoconnect();
 }
 
-export function setupAdbConnector(callbackStatusConnecting_: () => void, callbackStatusConnected_: () => void, callbackStatusFailed_: () => void, getIsAutoconnectEnabled_: () => boolean, getIsNewNetwork_: () => boolean, getDeviceInfo_: () => {success: boolean, disabled: boolean, ssid: string}, getNetworkSsid_: () => string, makeTerminalRecord_: (terminalRecord: TerminalRecord) => void, logger_: (data: string) => void, isEmulator_: boolean) {
+export function setupAdbConnector(platform_: string, callbackStatusConnecting_: () => void, callbackStatusConnected_: () => void, callbackStatusFailed_: () => void, getIsAutoconnectEnabled_: () => boolean, getIsNewNetwork_: () => boolean, getDeviceInfo_: () => {success: boolean, disabled: boolean, ssid: string}, getNetworkSsid_: () => string, makeTerminalRecord_: (terminalRecord: TerminalRecord) => void, logger_: (data: string) => void, isEmulator_: boolean) {
+    platform = platform_;
     logger = logger_;
     isEmulator = isEmulator_;
     getIsAutoconnectEnabled = getIsAutoconnectEnabled_;
