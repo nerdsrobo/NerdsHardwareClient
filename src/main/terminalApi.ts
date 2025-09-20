@@ -22,7 +22,7 @@ export function makeRecord(terminalRecord: TerminalRecord) {
 
 export function executeCommand(stdin: string) {
     exec(stdin, (stderr, stdout) => {
-        makeRecord({stdin: stdin, stdout: stdout, isErr: stderr?.message ? true : false, isUser: true})
+        makeRecord({stdin: stdin, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: true})
     })
 }
 

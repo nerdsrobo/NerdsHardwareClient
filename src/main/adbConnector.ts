@@ -31,7 +31,7 @@ export function connect(callback: (isSuccess: boolean) => void) {
     }
     const cmd = getPathToExec() + "adb connect 192.168.43.1:5555"
     exec(cmd, (stderr, stdout) => {
-        makeTerminalRecord({stdin: cmd, stdout: stdout, isErr: stderr?.message ? true : false, isUser: false})
+        makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         console.log(stdout);
         console.log(stderr?.message);
         if ( stderr?.message ) { console.log("tomat")}
@@ -49,7 +49,7 @@ export function disconnect(callback: (isSuccess: boolean) => void) {
     }
     const cmd = getPathToExec() + "adb disconnect 192.168.43.1:5555"
     exec(cmd, (stderr, stdout) => {
-        makeTerminalRecord({stdin: cmd, stdout: stdout, isErr: stderr?.message ? true : false, isUser: false})
+        makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         console.log(stdout);
         console.log(stderr?.message);
         if ( stderr?.message ) { console.log("tomat")}
@@ -67,7 +67,7 @@ export function checkDevice(callback: (isOnline: boolean) => void) {
     }
     const cmd = getPathToExec() + "adb devices"
     exec(cmd, (stderr, stdout) => {
-        makeTerminalRecord({stdin: cmd, stdout: stdout, isErr: stderr?.message ? true : false, isUser: false})
+        makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         if ( stderr?.message ) {
             callback(false);
             return;
