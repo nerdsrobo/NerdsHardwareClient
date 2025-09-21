@@ -1,34 +1,47 @@
-# alt-hardware-client
+# Nerds Hardware Client
 
-An Electron application with Svelte and TypeScript
+![Screenshot](https://raw.githubusercontent.com/nerdsrobo/NerdsHardwareClient/refs/heads/master/NerdsHardwareClientPreview.png)
 
-## Recommended IDE Setup
+**An application for connecting to FTC hardware using Android Debug Bridge.**
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode)
+## Features
+ - Cross-platform
+ - Possibility to disconnect from the hardware
+ - Integrated FTC Dashboard
 
-## Project Setup
+---
+
+**Linux WiFi detection workability:**
+To make WiFi detection work on linux, download `wireless-tools`. Install it, using your package manager, e. g. on Ubuntu: `sudo apt install wireless-tools`, on Arch: `sudo pacman -S wireless-tools`, etc.
+
+## Development
+
+A project using electron + svelte, by electron-vite
 
 ### Install
 
 ```bash
-$ npm install
+npm i
 ```
+Installs all dependencies
 
 ### Development
 
 ```bash
-$ npm run dev
+npm run dev
 ```
+Runs an app with hot reload on */renderer* part. To update the electron */main* part, rewrite cmd
 
 ### Build
 
 ```bash
 # For windows
-$ npm run build:win
+npm run build:win
 
-# For macOS
-$ npm run build:mac
+# For mac
+npm run build:mac
 
-# For Linux
-$ npm run build:linux
+# For linux
+npm run build:linux
 ```
+To build specified OC application, recommends to use OC specified PC. On win recommends to build using admin terminal

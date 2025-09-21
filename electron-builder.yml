@@ -2,6 +2,7 @@ appId: com.nerdsrobo.nerdshardwareclient
 productName: NerdsHardwareClient
 directories:
   buildResources: build
+electronLanguages: "en-US"
 files:
   - '!**/.vscode/*'
   - '!src/*'
@@ -13,8 +14,11 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: NerdsHardwareClient
+  executableName: Nerds Hardware Client
   extraFiles: adb/win32/**
+  target:
+    - msi
+    - zip
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
@@ -34,7 +38,7 @@ linux:
     - AppImage
     - snap
     - deb
-  maintainer: electronjs.org
+    - tar.gz
   category: Utility
   extraFiles: adb/linux/**
 appImage:

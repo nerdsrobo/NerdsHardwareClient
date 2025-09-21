@@ -313,7 +313,7 @@
         padding: 0px;
         @font-face {
             font-family: 'Ubuntu';
-            src: url("./assets/Ubuntu-Regular.ttf");
+            src: url("../assets/Ubuntu-Regular.ttf");
         }
         font-family: 'Ubuntu', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: $background;

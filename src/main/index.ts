@@ -71,7 +71,7 @@ function createWindow(): void {
     ipcSend("pinger:update", detectResult)
   }, logger, isEmulator);
   setupAdbConnector(process.platform, () => {updateStatus("Connecting")}, () => { if ( !browserWindow.isFocused() ) { new Notification({title: "Connected ADB", silent: true}).show() } updateStatus("Connected")}, () => {updateStatus("Failed")}, () => {return settingsExport.adb_autoconnect.enabled}, () => {return isNewNetwork}, () => {return detectResult.ch}, () => {return lastNetwork.ssid}, makeRecord, logger, isEmulator);
-  setupTerminalApi((terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger);
+  setupTerminalApi(process.platform, (terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger);
 
   ipcMain.on("terminalApi:exec", (_e, stdin: string) => {executeCommand(stdin)})
   ipcMain.on("terminalApi:load", (_e) => {ipcSend("terminalApi:before", terminalRecords)})
