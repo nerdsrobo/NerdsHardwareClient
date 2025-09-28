@@ -3,12 +3,21 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
+    build: {
+      outDir: "./out-web/main"
+    }
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
+    build: {
+      outDir: "./out-web/preload"
+    }
   },
   renderer: {
-    plugins: [svelte()]
+    plugins: [svelte()],
+    build: {
+      outDir: "./out-web/renderer"
+    }
   }
 })

@@ -2,22 +2,19 @@
   "name": "nerds-hardware-client",
   "version": "0.1.0",
   "description": "An Electron application with Svelte and TypeScript",
-  "main": "./out/main/index.js",
+  "main": "./out-web/main/index.js",
   "author": "nin31900",
   "homepage": "https://nerdsrobo.ru",
   "scripts": {
     "svelte-check": "svelte-check --tsconfig ./tsconfig.json",
     "typecheck": "npm run svelte-check",
-    "start": "electron-forge start",
     "dev": "electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
-    "build:mac": "npm run build && electron-builder --mac",
-    "build:linux": "npm run build && electron-builder --linux",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "build:mac": "npm run build && electron-forge make",
+    "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
