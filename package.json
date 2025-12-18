@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "An Electron application with Svelte and TypeScript",
   "main": "./out-web/main/index.js",
-  "author": "nin31900",
+  "author": "nin31900 <nerdsrobo@gmail.com> (https://nerdsrobo.ru)",
   "homepage": "https://nerdsrobo.ru",
   "scripts": {
     "svelte-check": "svelte-check --tsconfig ./tsconfig.json",
