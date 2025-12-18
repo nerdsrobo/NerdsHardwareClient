@@ -41,10 +41,10 @@ function createWindow(): void {
     show: true,
     // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
-    // webPreferences: {
-    //   // preload: join(__dirname, '../preload/index.js'),
-    //   sandbox: false
-    // },
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false
+    },
     title: "Nerds Hardware Client",
     // titleBarOverlay: true
   })
@@ -113,15 +113,15 @@ function createWindow(): void {
     // // mainWindow.loadURL("https://example.com")
   }
 
-  mainWindow.webContents.once('did-finish-load', () => {
-    mainWindow.show()
-  })
-  mainWindow.webContents.on(
-    'did-fail-load',
-    (_e, code, desc, url) => {
-      // logger(`LOAD FAIL ${code}: ${desc} ${url}`)
-    }
-  )
+  // mainWindow.webContents.once('did-finish-load', () => {
+  //   mainWindow.show()
+  // })
+  // mainWindow.webContents.on(
+  //   'did-fail-load',
+  //   (_e, code, desc, url) => {
+  //     // logger(`LOAD FAIL ${code}: ${desc} ${url}`)
+  //   }
+  // )
 
 }
 
