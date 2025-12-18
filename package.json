@@ -10,11 +10,11 @@
     "typecheck": "npm run svelte-check",
     "dev": "electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
-    "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "npm run build && electron-builder --dir",
-    "build:win": "npm run build && electron-builder --win",
+    "postinstall": "npx electron-builder install-app-deps -y",
+    "build:unpack": "npm run build && npx electron-builder --dir -y",
+    "build:win": "npm run build && npx electron-builder --win -y",
     "build:mac": "npm run build && electron-forge make",
-    "build:linux": "npm run build && electron-builder --linux"
+    "build:linux": "npm run build && npx electron-builder --linux -y"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
