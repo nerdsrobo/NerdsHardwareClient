@@ -14,6 +14,7 @@ import { executeCommand, makeRecord, setupTerminalApi, TerminalRecord, terminalR
 let firstLoaded = {};
 
 let browserWindow: BrowserWindow;
+let mainWindow;
 
 let lastNetwork: {ssid: string, found: boolean} = {ssid: '', found: false};
 let detectResult: {ch: {success: boolean, disabled: boolean, ssid: string}, dash: {success: boolean, disabled: boolean, ssid: string}} = {ch: {success: false, disabled: true, ssid: ''}, dash: {success: false, disabled: true, ssid: ''}};
@@ -32,7 +33,7 @@ function createWindow(): void {
   firstLoaded = firstLoad();
 
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 960,
     height: 560,
     minWidth: 880,
@@ -108,6 +109,10 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  mainWindow.webContents.once('did-finish-load', () => {
+  mainWindow.show()
+})
 }
 
 // This method will be called when Electron has finished
@@ -136,7 +141,7 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0 || process.platform == "darwin") createWindow()
+    if (BrowserWindow.getAllWindows().length === 0 ) createWindow()
   })
 })
 
