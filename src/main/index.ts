@@ -21,116 +21,106 @@ let detectResult: {ch: {success: boolean, disabled: boolean, ssid: string}, dash
 
 const isEmulator = existsSync("./logs/emulator.json");
 
-// function ipcSend(channel: string, ...args: any[]) {
-//   browserWindow.webContents.send(channel, ...args);
-// }
+function ipcSend(channel: string, ...args: any[]) {
+  browserWindow.webContents.send(channel, ...args);
+}
 
 
-// function createWindow(): void {
-//   loggerInit();
+function createWindow(): void {
+  loggerInit();
 
-//   setLogger(logger);
-//   firstLoaded = firstLoad();
+  setLogger(logger);
+  firstLoaded = firstLoad();
 
-//   // Create the browser window.
-//   mainWindow = new BrowserWindow({
-//     width: 960,
-//     height: 560,
-//     minWidth: 880,
-//     minHeight: 375,
-//     show: false,
-//     autoHideMenuBar: true,
-//     ...(process.platform === 'linux' ? { icon } : {}),
-//     webPreferences: {
-//       // preload: join(__dirname, '../preload/index.js'),
-//       sandbox: false
-//     },
-//     title: "Nerds Hardware Client",
-//     titleBarOverlay: true
-//   })
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    width: 960,
+    height: 560,
+    minWidth: 880,
+    minHeight: 375,
+    show: true,
+    autoHideMenuBar: true,
+    ...(process.platform === 'linux' ? { icon } : {}),
+    webPreferences: {
+      // preload: join(__dirname, '../preload/index.js'),
+      sandbox: false
+    },
+    title: "Nerds Hardware Client",
+    titleBarOverlay: true
+  })
 
-//   browserWindow = mainWindow;
-//   // // // ipcMain.on("settings:firstload", (_e) => {ipcSend("settings:update", firstLoaded)});
-//   // // // ipcMain.on("settings:modify", (_e, key, newval) => updateSetting(key, newval));
+  browserWindow = mainWindow;
+  // // // ipcMain.on("settings:firstload", (_e) => {ipcSend("settings:update", firstLoaded)});
+  // // // ipcMain.on("settings:modify", (_e, key, newval) => updateSetting(key, newval));
 
-//   // logger("network " + getNetworkName(process.platform));
-//   // netnetnet((name) => {console.log(name)})
+  // logger("network " + getNetworkName(process.platform));
+  // netnetnet((name) => {console.log(name)})
 
-//   // // // setupStatusApi((status: string) => {ipcSend("status:update", status)}, logger);
-//   // // // setupNetworkUpdater(process.platform, (ssid: string, found: boolean) => { 
-//   // // //   if ( !found ) { updateStatus("Network not found"); }
-//   // // //   if ( lastNetwork.ssid != ssid && found ) { logger("! : network : Network changed to: " + ssid); lastNetwork = {ssid: ssid, found: found}; updateStatus("Network changed"); makePingOutOfTurn(); makeTryAutoconnectOutOfTurn(); }
-//   // // //   lastNetwork = {ssid: ssid, found: found};
-//   // // //   ipcSend("network:update", ssid, found)
-//   // // // }, logger, isEmulator);
-//   // // // setupPingerUpdater(() => {return settingsExport}, () => {return lastNetwork}, (type_: string, success: boolean, disabled: boolean) => {
-//   // // //   detectResult[type_] = {success: success, disabled: disabled, ssid: lastNetwork.ssid};
-//   // // //   if ( type_ == "ch" ) {
-//   // // //     if ( success && isNewNetwork ) { updateStatus("Device detected") }
-//   // // //     if ( disabled && isNewNetwork ) { updateStatus("Auto-detection disabled") }
-//   // // //     if ( !success && !disabled && isNewNetwork ) { updateStatus("Idle") }
-//   // // //   }
-//   // // //   ipcSend("pinger:update", detectResult)
-//   // // // }, logger, isEmulator);
-//   // // // setupAdbConnector(process.platform, () => {updateStatus("Connecting")}, () => { if ( !browserWindow.isFocused() ) { new Notification({title: "Connected ADB", silent: true}).show() } updateStatus("Connected")}, () => {updateStatus("Failed")}, () => {return settingsExport.adb_autoconnect.enabled}, () => {return isNewNetwork}, () => {return detectResult.ch}, () => {return lastNetwork.ssid}, makeRecord, logger, isEmulator);
-//   // // // setupTerminalApi(process.platform, (terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger);
+  // // // setupStatusApi((status: string) => {ipcSend("status:update", status)}, logger);
+  // // // setupNetworkUpdater(process.platform, (ssid: string, found: boolean) => { 
+  // // //   if ( !found ) { updateStatus("Network not found"); }
+  // // //   if ( lastNetwork.ssid != ssid && found ) { logger("! : network : Network changed to: " + ssid); lastNetwork = {ssid: ssid, found: found}; updateStatus("Network changed"); makePingOutOfTurn(); makeTryAutoconnectOutOfTurn(); }
+  // // //   lastNetwork = {ssid: ssid, found: found};
+  // // //   ipcSend("network:update", ssid, found)
+  // // // }, logger, isEmulator);
+  // // // setupPingerUpdater(() => {return settingsExport}, () => {return lastNetwork}, (type_: string, success: boolean, disabled: boolean) => {
+  // // //   detectResult[type_] = {success: success, disabled: disabled, ssid: lastNetwork.ssid};
+  // // //   if ( type_ == "ch" ) {
+  // // //     if ( success && isNewNetwork ) { updateStatus("Device detected") }
+  // // //     if ( disabled && isNewNetwork ) { updateStatus("Auto-detection disabled") }
+  // // //     if ( !success && !disabled && isNewNetwork ) { updateStatus("Idle") }
+  // // //   }
+  // // //   ipcSend("pinger:update", detectResult)
+  // // // }, logger, isEmulator);
+  // // // setupAdbConnector(process.platform, () => {updateStatus("Connecting")}, () => { if ( !browserWindow.isFocused() ) { new Notification({title: "Connected ADB", silent: true}).show() } updateStatus("Connected")}, () => {updateStatus("Failed")}, () => {return settingsExport.adb_autoconnect.enabled}, () => {return isNewNetwork}, () => {return detectResult.ch}, () => {return lastNetwork.ssid}, makeRecord, logger, isEmulator);
+  // // // setupTerminalApi(process.platform, (terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger);
 
-//   // // // ipcMain.on("terminalApi:exec", (_e, stdin: string) => {executeCommand(stdin)})
-//   // // // ipcMain.on("terminalApi:load", (_e) => {ipcSend("terminalApi:before", terminalRecords)})
+  // // // ipcMain.on("terminalApi:exec", (_e, stdin: string) => {executeCommand(stdin)})
+  // // // ipcMain.on("terminalApi:load", (_e) => {ipcSend("terminalApi:before", terminalRecords)})
 
-//   // // // setCallbackUpdate((log: string) => {ipcSend("logs:update", log)});
-//   // // // ipcMain.on("logs:load", (_e) => {ipcSend("logs:before", logsRecords)})
+  // // // setCallbackUpdate((log: string) => {ipcSend("logs:update", log)});
+  // // // ipcMain.on("logs:load", (_e) => {ipcSend("logs:before", logsRecords)})
 
-//   // // // ipcMain.on("adb:connect", (_e) => {updateStatus("Connecting"); connect((isSuccess: boolean) => {
-//   // // //   if ( isSuccess ) { updateStatus("Connected") }
-//   // // //   else { updateStatus("Failed") }
-//   // // //   ipcSend("adb:connect:result", isSuccess)
-//   // // // })})
-//   // // // ipcMain.on("adb:disconnect", (_e) => {disconnect((isSuccess: boolean) => {
-//   // // //   if ( isSuccess ) { updateStatus("Disconnected") }
-//   // // //   else { updateStatus("Failed") }
-//   // // //   ipcSend("adb:disconnect:result", isSuccess)
-//   // // // })})
+  // // // ipcMain.on("adb:connect", (_e) => {updateStatus("Connecting"); connect((isSuccess: boolean) => {
+  // // //   if ( isSuccess ) { updateStatus("Connected") }
+  // // //   else { updateStatus("Failed") }
+  // // //   ipcSend("adb:connect:result", isSuccess)
+  // // // })})
+  // // // ipcMain.on("adb:disconnect", (_e) => {disconnect((isSuccess: boolean) => {
+  // // //   if ( isSuccess ) { updateStatus("Disconnected") }
+  // // //   else { updateStatus("Failed") }
+  // // //   ipcSend("adb:disconnect:result", isSuccess)
+  // // // })})
 
   
 
-//   // mainWindow.on('ready-to-show', () => {
-//   //   mainWindow.show()
-//   // })
+  // mainWindow.on('ready-to-show', () => {
+  //   mainWindow.show()
+  // })
 
-//   mainWindow.webContents.setWindowOpenHandler((details) => {
-//     shell.openExternal(details.url)
-//     return { action: 'deny' }
-//   })
-
-//   // HMR for renderer base on electron-vite cli.
-//   // Load the remote URL for development or the local html file for production.
-//   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-//     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-//   } else {
-//     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-//   }
-
-//   mainWindow.webContents.once('did-finish-load', () => {
-//     mainWindow.show()
-//   })
-//   mainWindow.webContents.on(
-//     'did-fail-load',
-//     (_e, code, desc, url) => {
-//       logger(`LOAD FAIL ${code}: ${desc} ${url}`)
-//     }
-//   )
-
-// }
-
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    show: true
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url)
+    return { action: 'deny' }
   })
 
-  win.loadURL('https://example.com')
+  // HMR for renderer base on electron-vite cli.
+  // Load the remote URL for development or the local html file for production.
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  } else {
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  }
+
+  mainWindow.webContents.once('did-finish-load', () => {
+    mainWindow.show()
+  })
+  mainWindow.webContents.on(
+    'did-fail-load',
+    (_e, code, desc, url) => {
+      logger(`LOAD FAIL ${code}: ${desc} ${url}`)
+    }
+  )
+
 }
 
 
