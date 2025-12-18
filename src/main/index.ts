@@ -27,10 +27,10 @@ function ipcSend(channel: string, ...args: any[]) {
 
 
 function createWindow(): void {
-  loggerInit();
+  // // // loggerInit();
 
-  setLogger(logger);
-  firstLoaded = firstLoad();
+  // // // setLogger(logger);
+  // // // firstLoaded = firstLoad();
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -39,14 +39,14 @@ function createWindow(): void {
     minWidth: 880,
     minHeight: 375,
     show: true,
-    autoHideMenuBar: true,
+    // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
-    webPreferences: {
-      // preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
-    },
+    // webPreferences: {
+    //   // preload: join(__dirname, '../preload/index.js'),
+    //   sandbox: false
+    // },
     title: "Nerds Hardware Client",
-    titleBarOverlay: true
+    // titleBarOverlay: true
   })
 
   browserWindow = mainWindow;
@@ -108,7 +108,8 @@ function createWindow(): void {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    // mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadURL("https://example.com")
   }
 
   mainWindow.webContents.once('did-finish-load', () => {
