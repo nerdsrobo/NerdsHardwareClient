@@ -93,9 +93,9 @@ function createWindow(): void {
 
   
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
+  // mainWindow.on('ready-to-show', () => {
+  //   mainWindow.show()
+  // })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -111,8 +111,15 @@ function createWindow(): void {
   }
 
   mainWindow.webContents.once('did-finish-load', () => {
-  mainWindow.show()
-})
+    mainWindow.show()
+  })
+  mainWindow.webContents.on(
+    'did-fail-load',
+    (_e, code, desc, url) => {
+      logger(`LOAD FAIL ${code}: ${desc} ${url}`)
+    }
+  )
+
 }
 
 // This method will be called when Electron has finished
