@@ -108,7 +108,8 @@ function createWindow(): void {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    // mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(join(process.resourcesPath, 'app.asar', 'renderer', 'index.html'))
     // // mainWindow.loadURL("https://example.com")
   }
 
@@ -118,7 +119,7 @@ function createWindow(): void {
   mainWindow.webContents.on(
     'did-fail-load',
     (_e, code, desc, url) => {
-      logger(`LOAD FAIL ${code}: ${desc} ${url}`)
+      // logger(`LOAD FAIL ${code}: ${desc} ${url}`)
     }
   )
 
