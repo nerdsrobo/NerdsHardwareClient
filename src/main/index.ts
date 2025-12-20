@@ -27,7 +27,7 @@ function ipcSend(channel: string, ...args: any[]) {
 
 
 function createWindow(): void {
-  // // // loggerInit();
+  loggerInit();
 
   // // // setLogger(logger);
   firstLoaded = firstLoad();
