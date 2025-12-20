@@ -29,8 +29,8 @@ function ipcSend(channel: string, ...args: any[]) {
 function createWindow(): void {
   loggerInit();
 
-  // // // setLogger(logger);
-  // // firstLoaded = firstLoad();
+  setLogger(logger);
+  firstLoaded = firstLoad();
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -50,47 +50,47 @@ function createWindow(): void {
   })
 
   browserWindow = mainWindow;
-  // // // ipcMain.on("settings:firstload", (_e) => {ipcSend("settings:update", firstLoaded)});
-  // // // ipcMain.on("settings:modify", (_e, key, newval) => updateSetting(key, newval));
+  ipcMain.on("settings:firstload", (_e) => {ipcSend("settings:update", firstLoaded)});
+  ipcMain.on("settings:modify", (_e, key, newval) => updateSetting(key, newval));
 
   // logger("network " + getNetworkName(process.platform));
   // netnetnet((name) => {console.log(name)})
 
-  // // // setupStatusApi((status: string) => {ipcSend("status:update", status)}, logger);
-  // // // setupNetworkUpdater(process.platform, (ssid: string, found: boolean) => { 
-  // // //   if ( !found ) { updateStatus("Network not found"); }
-  // // //   if ( lastNetwork.ssid != ssid && found ) { logger("! : network : Network changed to: " + ssid); lastNetwork = {ssid: ssid, found: found}; updateStatus("Network changed"); makePingOutOfTurn(); makeTryAutoconnectOutOfTurn(); }
-  // // //   lastNetwork = {ssid: ssid, found: found};
-  // // //   ipcSend("network:update", ssid, found)
-  // // // }, logger, isEmulator);
-  // // // setupPingerUpdater(() => {return settingsExport}, () => {return lastNetwork}, (type_: string, success: boolean, disabled: boolean) => {
-  // // //   detectResult[type_] = {success: success, disabled: disabled, ssid: lastNetwork.ssid};
-  // // //   if ( type_ == "ch" ) {
-  // // //     if ( success && isNewNetwork ) { updateStatus("Device detected") }
-  // // //     if ( disabled && isNewNetwork ) { updateStatus("Auto-detection disabled") }
-  // // //     if ( !success && !disabled && isNewNetwork ) { updateStatus("Idle") }
-  // // //   }
-  // // //   ipcSend("pinger:update", detectResult)
-  // // // }, logger, isEmulator);
-  // // // setupAdbConnector(process.platform, () => {updateStatus("Connecting")}, () => { if ( !browserWindow.isFocused() ) { new Notification({title: "Connected ADB", silent: true}).show() } updateStatus("Connected")}, () => {updateStatus("Failed")}, () => {return settingsExport.adb_autoconnect.enabled}, () => {return isNewNetwork}, () => {return detectResult.ch}, () => {return lastNetwork.ssid}, makeRecord, logger, isEmulator);
-  // // // setupTerminalApi(process.platform, (terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger);
+  setupStatusApi((status: string) => {ipcSend("status:update", status)}, logger);
+  setupNetworkUpdater(process.platform, (ssid: string, found: boolean) => { 
+    if ( !found ) { updateStatus("Network not found"); }
+    if ( lastNetwork.ssid != ssid && found ) { logger("! : network : Network changed to: " + ssid); lastNetwork = {ssid: ssid, found: found}; updateStatus("Network changed"); makePingOutOfTurn(); makeTryAutoconnectOutOfTurn(); }
+    lastNetwork = {ssid: ssid, found: found};
+    ipcSend("network:update", ssid, found)
+  }, logger, false);
+  setupPingerUpdater(() => {return settingsExport}, () => {return lastNetwork}, (type_: string, success: boolean, disabled: boolean) => {
+    detectResult[type_] = {success: success, disabled: disabled, ssid: lastNetwork.ssid};
+    if ( type_ == "ch" ) {
+      if ( success && isNewNetwork ) { updateStatus("Device detected") }
+      if ( disabled && isNewNetwork ) { updateStatus("Auto-detection disabled") }
+      if ( !success && !disabled && isNewNetwork ) { updateStatus("Idle") }
+    }
+    ipcSend("pinger:update", detectResult)
+  }, logger, false);
+  setupAdbConnector(process.platform, () => {updateStatus("Connecting")}, () => { if ( !browserWindow.isFocused() ) { new Notification({title: "Connected ADB", silent: true}).show() } updateStatus("Connected")}, () => {updateStatus("Failed")}, () => {return settingsExport.adb_autoconnect.enabled}, () => {return isNewNetwork}, () => {return detectResult.ch}, () => {return lastNetwork.ssid}, makeRecord, logger, false);
+  setupTerminalApi(process.platform, (terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger);
 
-  // // // ipcMain.on("terminalApi:exec", (_e, stdin: string) => {executeCommand(stdin)})
-  // // // ipcMain.on("terminalApi:load", (_e) => {ipcSend("terminalApi:before", terminalRecords)})
+  ipcMain.on("terminalApi:exec", (_e, stdin: string) => {executeCommand(stdin)})
+  ipcMain.on("terminalApi:load", (_e) => {ipcSend("terminalApi:before", terminalRecords)})
 
-  // // // setCallbackUpdate((log: string) => {ipcSend("logs:update", log)});
-  // // // ipcMain.on("logs:load", (_e) => {ipcSend("logs:before", logsRecords)})
+  setCallbackUpdate((log: string) => {ipcSend("logs:update", log)});
+  ipcMain.on("logs:load", (_e) => {ipcSend("logs:before", logsRecords)})
 
-  // // // ipcMain.on("adb:connect", (_e) => {updateStatus("Connecting"); connect((isSuccess: boolean) => {
-  // // //   if ( isSuccess ) { updateStatus("Connected") }
-  // // //   else { updateStatus("Failed") }
-  // // //   ipcSend("adb:connect:result", isSuccess)
-  // // // })})
-  // // // ipcMain.on("adb:disconnect", (_e) => {disconnect((isSuccess: boolean) => {
-  // // //   if ( isSuccess ) { updateStatus("Disconnected") }
-  // // //   else { updateStatus("Failed") }
-  // // //   ipcSend("adb:disconnect:result", isSuccess)
-  // // // })})
+  ipcMain.on("adb:connect", (_e) => {updateStatus("Connecting"); connect((isSuccess: boolean) => {
+    if ( isSuccess ) { updateStatus("Connected") }
+    else { updateStatus("Failed") }
+    ipcSend("adb:connect:result", isSuccess)
+  })})
+  ipcMain.on("adb:disconnect", (_e) => {disconnect((isSuccess: boolean) => {
+    if ( isSuccess ) { updateStatus("Disconnected") }
+    else { updateStatus("Failed") }
+    ipcSend("adb:disconnect:result", isSuccess)
+  })})
 
   
 
