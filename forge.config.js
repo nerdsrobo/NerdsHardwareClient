@@ -6,7 +6,12 @@ module.exports = {
     asar: true,
     icon: './build/icon',
     extraResource: [
-      "./adb"
+      {
+        "from": "./adb",
+        "to": "./adb",
+        "filter": ["**/*"],
+        "executable": true
+      }
     ]
   },
   rebuildConfig: {},

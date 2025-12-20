@@ -40,7 +40,8 @@ function createWindow(): void {
 
   if ( process.platform != "win32" ) {
     presetAdbConnectorPlatform(process.platform)
-    try {execSync("chmod +x " + getPathToExec() + "adb")}
+    try {execSync('xattr -d com.apple.quarantine ' + getPathToExec() + "adb" + ' || true');
+        execSync("chmod +x " + getPathToExec() + "adb")}
     catch (e) { logger("failed to chmod, " + e) }
   }
 
