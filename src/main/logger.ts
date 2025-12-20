@@ -32,7 +32,7 @@ export function loggerInit() {
     // // // // console.log(ts)
     // // // // // writeFile("./logs/" + ts + ".log", new Date().toTimeString() + " : " + "loggerInited" + "\n", { flag: 'w+' }, _err => {console.log(_err)});
     // // // // writeFileSync("./logs/" + ts + ".log", new Date().toLocaleTimeString() + " : " + "logger inited" + "\n", { flag: 'w+' })//, _err => {handleOrder()});
-    log.initialize();
+    // log.initialize();
 }
 
 export function logger(data: string) {
