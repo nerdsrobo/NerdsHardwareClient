@@ -2,7 +2,7 @@
 
 // // // // let ts: string = ((date => {return date.toLocaleDateString().replace("/", ".").replace("/", ".").replace("/", ".") + '-' + date.toLocaleTimeString().replace(":", ".").replace(":", ".")})(new Date()));
 
-import log from 'electron-log/main';
+// import log from 'electron-log/main';
 
 // // // // let order: Array<string> = [];
 // // // // let isBusy = false;
@@ -38,7 +38,7 @@ export function loggerInit() {
 export function logger(data: string) {
     // // // // if ( !isBusy ) { isBusy = true; addToRecords(new Date().toLocaleTimeString() + " : " + data); appendFile("./logs/" + ts + ".log", new Date().toLocaleTimeString() + " : " + data + "\n", _err => {handleOrder()}); }
     // // // // else { order.push(new Date().toLocaleTimeString() + " : " + data); }
-    log.info(data);
+    // log.info(data);
     addToRecords(new Date().toLocaleTimeString() + " : " + data)
 }
 

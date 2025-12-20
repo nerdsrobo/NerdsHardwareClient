@@ -30,7 +30,7 @@ function createWindow(): void {
   // loggerInit();
 
   // // // setLogger(logger);
-  firstLoaded = firstLoad();
+  // // firstLoaded = firstLoad();
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
