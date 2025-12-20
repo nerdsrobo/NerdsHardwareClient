@@ -4,7 +4,7 @@ import { TerminalRecord } from "./terminalApi";
 import { join } from "path";
 
 function getPathToExec() {
-    if ( platform == "darwin" ) { return join(process.resourcesPath, 'app.asar', 'adb', 'darwin', 'platform-tools') }
+    if ( platform == "darwin" ) { return join(process.resourcesPath, 'app.asar', 'adb', 'darwin', 'platform-tools') + '/' }
     return "./adb/" + platform + "/platform-tools/";
 }
 
