@@ -7,9 +7,10 @@ import { firstLoad, setLogger, settingsExport, updateSetting } from './settingsS
 import { setupNetworkUpdater } from './network'
 import { makePingOutOfTurn, setupPingerUpdater } from './pinger'
 // // // // // import { existsSync } from 'fs'
-import { connect, disconnect, makeTryAutoconnectOutOfTurn, setupAdbConnector } from './adbConnector'
+import { connect, disconnect, getPathToExec, makeTryAutoconnectOutOfTurn, presetAdbConnectorPlatform, setupAdbConnector } from './adbConnector'
 import { isNewNetwork, setupStatusApi, updateStatus } from './statusApi'
 import { executeCommand, makeRecord, setupTerminalApi, TerminalRecord, terminalRecords } from './terminalApi'
+import { execSync } from 'child_process'
 
 let firstLoaded = {};
 
@@ -36,6 +37,12 @@ function createWindow(): void {
 
   setLogger(logger);
   firstLoaded = firstLoad();
+
+  if ( process.platform != "win32" ) {
+    presetAdbConnectorPlatform(process.platform)
+    try {execSync("chmod +x " + getPathToExec() + "adb")}
+    catch (e) { logger("failed to chmod, " + e) }
+  }
 
   // Create the browser window.
   mainWindow = new BrowserWindow({

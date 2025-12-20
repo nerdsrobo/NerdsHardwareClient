@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { TerminalRecord } from "./terminalApi";
 import { join } from "path";
 
-function getPathToExec() {
+export function getPathToExec() {
     if ( platform == "darwin" ) { return join(process.resourcesPath, 'adb', 'darwin', 'platform-tools') + '/' }
     return "./adb/" + platform + "/platform-tools/";
 }
@@ -108,6 +108,10 @@ function idleUpdate() {
 
 export function makeTryAutoconnectOutOfTurn() {
     makeTryAutoconnect();
+}
+
+export function presetAdbConnectorPlatform(platform_: string) {
+    platform = platform_;
 }
 
 export function setupAdbConnector(platform_: string, callbackStatusConnecting_: () => void, callbackStatusConnected_: () => void, callbackStatusFailed_: () => void, getIsAutoconnectEnabled_: () => boolean, getIsNewNetwork_: () => boolean, getDeviceInfo_: () => {success: boolean, disabled: boolean, ssid: string}, getNetworkSsid_: () => string, makeTerminalRecord_: (terminalRecord: TerminalRecord) => void, logger_: (data: string) => void, isEmulator_: boolean) {
