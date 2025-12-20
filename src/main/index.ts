@@ -22,7 +22,12 @@ let detectResult: {ch: {success: boolean, disabled: boolean, ssid: string}, dash
 // // // // // const isEmulator = existsSync("./logs/emulator.json");
 
 function ipcSend(channel: string, ...args: any[]) {
-  browserWindow.webContents.send(channel, ...args);
+  try {
+    browserWindow.webContents.send(channel, ...args);
+  }
+  catch (e) {
+    return
+  }
 }
 
 

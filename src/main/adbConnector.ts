@@ -1,8 +1,10 @@
 import { execute } from "./execShell";
 import { readFileSync } from "fs";
 import { TerminalRecord } from "./terminalApi";
+import { join } from "path";
 
 function getPathToExec() {
+    if ( platform == "darwin" ) { return join(process.resourcesPath, 'app.asar', 'adb', 'darwin', 'platform-tools') }
     return "./adb/" + platform + "/platform-tools/";
 }
 
