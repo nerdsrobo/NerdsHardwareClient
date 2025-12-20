@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain, Notification } from 'electron'
 import { join } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-// import { logger, loggerInit, logsRecords, setCallbackUpdate } from './logger'
+import { logger, loggerInit, logsRecords, setCallbackUpdate } from './logger'
 import { firstLoad, setLogger, settingsExport, updateSetting } from './settingsStorage'
 import { setupNetworkUpdater } from './network'
 import { makePingOutOfTurn, setupPingerUpdater } from './pinger'
@@ -27,7 +27,7 @@ function ipcSend(channel: string, ...args: any[]) {
 
 
 function createWindow(): void {
-  // loggerInit();
+  loggerInit();
 
   // // // setLogger(logger);
   // // firstLoaded = firstLoad();
@@ -142,10 +142,10 @@ app.whenReady().then(() => {
 
   
 
-  // logger("App ready1");
-  // logger("App ready2");
-  // logger("App ready3");
-  // logger("App ready4");
+  logger("App ready1");
+  logger("App ready2");
+  logger("App ready3");
+  logger("App ready4");
 
   createWindow()
 
