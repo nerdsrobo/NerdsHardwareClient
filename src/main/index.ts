@@ -46,7 +46,7 @@ function createWindow(): void {
       sandbox: false
     },
     title: "Nerds Hardware Client",
-    // titleBarOverlay: true
+    titleBarOverlay: true
   })
 
   browserWindow = mainWindow;
