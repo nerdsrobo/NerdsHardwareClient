@@ -6,7 +6,7 @@ import { logger, loggerInit, logsRecords, setCallbackUpdate } from './logger'
 import { firstLoad, setLogger, settingsExport, updateSetting } from './settingsStorage'
 import { setupNetworkUpdater } from './network'
 import { makePingOutOfTurn, setupPingerUpdater } from './pinger'
-import { existsSync } from 'fs'
+// // // // // import { existsSync } from 'fs'
 import { connect, disconnect, makeTryAutoconnectOutOfTurn, setupAdbConnector } from './adbConnector'
 import { isNewNetwork, setupStatusApi, updateStatus } from './statusApi'
 import { executeCommand, makeRecord, setupTerminalApi, TerminalRecord, terminalRecords } from './terminalApi'
@@ -19,7 +19,7 @@ let mainWindow;
 let lastNetwork: {ssid: string, found: boolean} = {ssid: '', found: false};
 let detectResult: {ch: {success: boolean, disabled: boolean, ssid: string}, dash: {success: boolean, disabled: boolean, ssid: string}} = {ch: {success: false, disabled: true, ssid: ''}, dash: {success: false, disabled: true, ssid: ''}};
 
-const isEmulator = existsSync("./logs/emulator.json");
+// // // // // const isEmulator = existsSync("./logs/emulator.json");
 
 function ipcSend(channel: string, ...args: any[]) {
   browserWindow.webContents.send(channel, ...args);
@@ -27,7 +27,7 @@ function ipcSend(channel: string, ...args: any[]) {
 
 
 function createWindow(): void {
-  // // // loggerInit();
+  loggerInit();
 
   // // // setLogger(logger);
   firstLoaded = firstLoad();
@@ -142,10 +142,10 @@ app.whenReady().then(() => {
 
   
 
-  logger("App ready1");
-  logger("App ready2");
-  logger("App ready3");
-  logger("App ready4");
+  // logger("App ready1");
+  // logger("App ready2");
+  // logger("App ready3");
+  // logger("App ready4");
 
   createWindow()
 
