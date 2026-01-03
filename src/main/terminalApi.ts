@@ -27,7 +27,7 @@ export function makeRecord(terminalRecord: TerminalRecord) {
 
 export function executeCommand(stdin: string) {
     executor.execute(stdin, (stderr, stdout) => {
-        makeRecord({stdin: stdin, stdout: (stderr?.message && stdin != "adb") ? stderr?.message : stdout, isErr: Boolean(stderr?.message && stdin != "adb"), isUser: true})
+        makeRecord({stdin: stdin, stdout: (stderr?.message && stdin != "adb" && stdin != "./adb") ? stderr?.message : stdout, isErr: Boolean(stderr?.message && stdin != "adb" && stdin != "./adb"), isUser: true})
     })
 }
 
