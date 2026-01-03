@@ -19,14 +19,14 @@ module.exports = {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin', 'win32', 'linux'],
     },
-    {
-      name: '@electron-forge/maker-deb',
-      config: {
-        options: {
-          icon: './build/icon.png'
-        }
-      }
-    },
+    // {
+    //   name: '@electron-forge/maker-deb',
+    //   config: {
+    //     options: {
+    //       icon: './build/icon.png'
+    //     }
+    //   }
+    // },
     {
       name: '@electron-forge/maker-rpm',
       config: {},
