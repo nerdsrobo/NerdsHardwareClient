@@ -33,7 +33,7 @@ export function connect(callback: (isSuccess: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb connect 192.168.43.1:5555", stdout: "(emulator) isSuccess: " + emulator.connect_isSuccess, isErr: !emulator.connect_isSuccess, isUser: false})
         return
     }
-    const cmd = "adb connect 192.168.43.1:5555"
+    const cmd = platform != "win32" ? "./" : "" + "adb connect 192.168.43.1:5555"
     executor.execute(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         console.log(stdout);
@@ -51,7 +51,7 @@ export function disconnect(callback: (isSuccess: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb disconnect 192.168.43.1:5555", stdout: "(emulator) isSuccess: " + emulator.disconnect_isSuccess, isErr: !emulator.disconnect_isSuccess, isUser: false})
         return
     }
-    const cmd = "adb disconnect 192.168.43.1:5555"
+    const cmd = platform != "win32" ? "./" : "" + "adb disconnect 192.168.43.1:5555"
     executor.execute(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         console.log(stdout);
@@ -69,7 +69,7 @@ export function checkDevice(callback: (isOnline: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb devices", stdout: "(emulator) isOnline: " + emulator.checkDevice_isOnline, isErr: false, isUser: false})
         return
     }
-    const cmd = "adb devices"
+    const cmd = platform != "win32" ? "./" : "" + "adb devices"
     executor.execute(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         if ( stderr?.message ) {
