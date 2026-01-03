@@ -11,6 +11,7 @@ import { connect, disconnect, getPathToExec, makeTryAutoconnectOutOfTurn, preset
 import { isNewNetwork, setupStatusApi, updateStatus } from './statusApi'
 import { executeCommand, makeRecord, setupTerminalApi, TerminalRecord, terminalRecords } from './terminalApi'
 import { execSync } from 'child_process'
+import { Executor } from './execShell'
 
 let firstLoaded = {};
 
@@ -89,7 +90,7 @@ function createWindow(): void {
     ipcSend("pinger:update", detectResult)
   }, logger, false);
   setupAdbConnector(process.platform, () => {updateStatus("Connecting")}, () => { if ( !browserWindow.isFocused() ) { new Notification({title: "Connected ADB", silent: true}).show() } updateStatus("Connected")}, () => {updateStatus("Failed")}, () => {return settingsExport.adb_autoconnect.enabled}, () => {return isNewNetwork}, () => {return detectResult.ch}, () => {return lastNetwork.ssid}, makeRecord, logger, false);
-  setupTerminalApi(process.platform, (terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger);
+  setupTerminalApi(process.platform, (terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger, new Executor(process.platform, getPathToExec()));
 
   ipcMain.on("terminalApi:exec", (_e, stdin: string) => {executeCommand(stdin)})
   ipcMain.on("terminalApi:load", (_e) => {ipcSend("terminalApi:before", terminalRecords)})

@@ -1,11 +1,11 @@
-import { execute } from "./execShell";
+import { Executor } from "./execShell";
 import { readFileSync } from "fs";
 import { TerminalRecord } from "./terminalApi";
-import { join } from "path";
+import { join, resolve } from "path";
 
 export function getPathToExec() {
     if ( platform == "darwin" ) { return join(process.resourcesPath, 'adb', 'darwin', 'platform-tools') + '/' }
-    return "./adb/" + platform + "/platform-tools/";
+    return resolve("adb/" + platform + "/platform-tools/");
 }
 
 let logger: (data: string) => void = (_data: string) => {};
@@ -23,6 +23,8 @@ let makeTerminalRecord: (terminalRecord: TerminalRecord) => void = (_terminalRec
 
 let platform = "win32";
 
+let executor = new Executor("win32", "adb/win32/platform-tools");
+
 export function connect(callback: (isSuccess: boolean) => void) {
     if ( isEmulator ) {
         const emulator = JSON.parse(readFileSync("./logs/emulator.json").toString());
@@ -31,8 +33,8 @@ export function connect(callback: (isSuccess: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb connect 192.168.43.1:5555", stdout: "(emulator) isSuccess: " + emulator.connect_isSuccess, isErr: !emulator.connect_isSuccess, isUser: false})
         return
     }
-    const cmd = getPathToExec() + "adb connect 192.168.43.1:5555"
-    execute(platform, cmd, (stderr, stdout) => {
+    const cmd = "adb connect 192.168.43.1:5555"
+    executor.execute(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         console.log(stdout);
         console.log(stderr?.message);
@@ -49,8 +51,8 @@ export function disconnect(callback: (isSuccess: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb disconnect 192.168.43.1:5555", stdout: "(emulator) isSuccess: " + emulator.disconnect_isSuccess, isErr: !emulator.disconnect_isSuccess, isUser: false})
         return
     }
-    const cmd = getPathToExec() + "adb disconnect 192.168.43.1:5555"
-    execute(platform, cmd, (stderr, stdout) => {
+    const cmd = "adb disconnect 192.168.43.1:5555"
+    executor.execute(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         console.log(stdout);
         console.log(stderr?.message);
@@ -67,8 +69,8 @@ export function checkDevice(callback: (isOnline: boolean) => void) {
         makeTerminalRecord({stdin: "(emulator) adb devices", stdout: "(emulator) isOnline: " + emulator.checkDevice_isOnline, isErr: false, isUser: false})
         return
     }
-    const cmd = getPathToExec() + "adb devices"
-    execute(platform, cmd, (stderr, stdout) => {
+    const cmd = "adb devices"
+    executor.execute(cmd, (stderr, stdout) => {
         makeTerminalRecord({stdin: cmd, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: false})
         if ( stderr?.message ) {
             callback(false);
@@ -126,5 +128,6 @@ export function setupAdbConnector(platform_: string, callbackStatusConnecting_: 
     callbackStatusConnected = callbackStatusConnected_;
     callbackStatusFailed = callbackStatusFailed_;
     makeTerminalRecord = makeTerminalRecord_;
+    executor = new Executor(platform, getPathToExec())
     idleUpdate()
 }

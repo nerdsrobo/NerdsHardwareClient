@@ -1,4 +1,5 @@
-import { execute } from "./execShell";
+import { Executor } from "./execShell";
+import { resolve } from "path";
 
 
 export interface TerminalRecord {
@@ -14,6 +15,8 @@ let callbackUpdate = (_terminalRecord: TerminalRecord) => {}
 
 let platform = "win32";
 
+let executor = new Executor("win32", resolve("adb/win32/platform-tools"))
+
 export let terminalRecords: Array<TerminalRecord> = [];
 
 export function makeRecord(terminalRecord: TerminalRecord) {
@@ -23,13 +26,14 @@ export function makeRecord(terminalRecord: TerminalRecord) {
 }
 
 export function executeCommand(stdin: string) {
-    execute(platform, stdin, (stderr, stdout) => {
-        makeRecord({stdin: stdin, stdout: stderr?.message ? stderr?.message : stdout, isErr: stderr?.message ? true : false, isUser: true})
+    executor.execute(stdin, (stderr, stdout) => {
+        makeRecord({stdin: stdin, stdout: (stderr?.message && stdin != "adb") ? stderr?.message : stdout, isErr: Boolean(stderr?.message && stdin != "adb"), isUser: true})
     })
 }
 
-export function setupTerminalApi(platform_: string, callbackUpdate_: (terminalRecord: TerminalRecord) => void, logger_: (data: string) => void) {
+export function setupTerminalApi(platform_: string, callbackUpdate_: (terminalRecord: TerminalRecord) => void, logger_: (data: string) => void, executor_: Executor) {
     callbackUpdate = callbackUpdate_;
     logger = logger_;
     platform = platform_;
+    executor = executor_;
 }
