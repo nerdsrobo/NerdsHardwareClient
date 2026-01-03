@@ -1,6 +1,6 @@
 {
   "name": "nerds-hardware-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An Electron application with Svelte and TypeScript",
   "main": "./out-web/main/index.js",
   "author": "nin31900 <nerdsrobo@gmail.com> (https://nerdsrobo.ru)",
