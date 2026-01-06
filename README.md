@@ -14,6 +14,10 @@
 **Linux WiFi detection workability:**
 To make WiFi detection work on linux, download `wireless-tools`. Install it, using your package manager, e. g. on Ubuntu: `sudo apt install wireless-tools`, on Arch: `sudo pacman -S wireless-tools`, etc.
 
+**Known bugs:**
+ - On MacOS Wi-Fi detection doesnt work
+ - Can't manage password of Control Hub at manage tab
+
 ## Development
 
 A project using electron + svelte, by electron-vite
