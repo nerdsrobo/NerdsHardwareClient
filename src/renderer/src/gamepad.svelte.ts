@@ -18,7 +18,6 @@ export class GamepadService {
     updateGamepadStatus() {
         this.updateTs = Date.now();
         if ( !this.ping ) { setTimeout(() => this.updateGamepadStatus(), 6700); return; }
-        console.log(this.gamepads.subers)
         let gm: Array<GamepadState | null> = [];
         let gmIds: Array<string> = [];
         let gmConnected = false;
