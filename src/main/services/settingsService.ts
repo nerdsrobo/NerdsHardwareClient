@@ -17,6 +17,10 @@ export class SettingsService extends Service {
         Object.keys(defaultSettings).forEach(key => {
             if ( !Object.keys(this.settingsStore.state).includes(key) ) {
                 this.updateSetting(key, defaultSettings[key]);
+                return;
+            }
+            if ( typeof this.settingsStore.state[key] != typeof defaultSettings[key] ) {
+                this.updateSetting(key, defaultSettings[key]);
             }
         })
 
