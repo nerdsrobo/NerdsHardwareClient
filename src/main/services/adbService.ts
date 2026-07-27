@@ -141,7 +141,7 @@ export class AdbService extends Service {
                 this.executor.platformRelativeAdbExecute("adb disconnect 192.168.43.1:5555", (_err, stdout, stderr) => {
                     eventBus.verbose("adb disconnect on " + attempt + " attempt - stdout: " + stdout + " stderr: " + stderr);
                     eventBus.emit("terminal:addRecord", {
-                        stdin: "adb disconnect 192.168.43.1:5555",
+                        stdin: (platform != "win32" ? "./" : "") + "adb disconnect 192.168.43.1:5555",
                         stdout: stdout,
                         isErr: stderr ? true : false,
                         isUser: false
@@ -175,7 +175,7 @@ export class AdbService extends Service {
     checkDeviceOnline(callback: (isDeviceOnline: DeviceAdbStatus) => void) {
         this.executor.platformRelativeAdbExecute("adb devices", (_err, stdout, _stderr) => {
             let isDeviceOnline = DeviceAdbStatus.NotConnected;
-            stdout.split('\r\n').forEach(line => {
+            stdout.split(platform != "win32" ? '\n' : '\r\n').forEach(line => {
                 if ( line.split('\t')[0] == "192.168.43.1:5555" ) {
                     if ( line.split('\t')[1] == "device" ) { isDeviceOnline = DeviceAdbStatus.Online; }
                     else { isDeviceOnline = DeviceAdbStatus.Offline; }
