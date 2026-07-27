@@ -1,53 +1,55 @@
-import { app, shell, BrowserWindow, ipcMain, Notification } from 'electron'
-import { join } from 'path'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { join, resolve } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { logger, loggerInit, logsRecords, setCallbackUpdate } from './logger'
-import { firstLoad, setLogger, settingsExport, updateSetting } from './settingsStorage'
-import { setupNetworkUpdater } from './network'
-import { makePingOutOfTurn, setupPingerUpdater } from './pinger'
-// // // // // import { existsSync } from 'fs'
-import { connect, disconnect, getPathToExec, makeTryAutoconnectOutOfTurn, presetAdbConnectorPlatform, setupAdbConnector } from './adbConnector'
-import { isNewNetwork, setupStatusApi, updateStatus } from './statusApi'
-import { executeCommand, makeRecord, setupTerminalApi, TerminalRecord, terminalRecords } from './terminalApi'
 import { execSync } from 'child_process'
+import { Service } from './services/service'
+import { TransportMainIPC } from './transport'
+import { LoggerService } from './services/loggerService'
+import { TerminalService } from './services/terminalService'
+import { SettingsService } from './services/settingsService'
+import { NetworkService } from './services/networkService'
+import { PingerService } from './services/pingerService'
+import { AdbService } from './services/adbService'
+import { StateService } from './services/stateService'
 import { Executor } from './execShell'
-
-let firstLoaded = {};
+import { NotificationService } from './services/notificationService'
+import { ManageApiService } from './services/manageApiService'
+import { FtcDashboardService } from './services/ftcDashboardService'
 
 let browserWindow: BrowserWindow;
 let mainWindow;
 
-let lastNetwork: {ssid: string, found: boolean} = {ssid: '', found: false};
-let detectResult: {ch: {success: boolean, disabled: boolean, ssid: string}, dash: {success: boolean, disabled: boolean, ssid: string}} = {ch: {success: false, disabled: true, ssid: ''}, dash: {success: false, disabled: true, ssid: ''}};
+// function ipcSend(channel: string, ...args: any[]) {
+//   try {
+//     browserWindow.webContents.send(channel, ...args);
+//   }
+//   catch (e) {
+//     return
+//   }
+// }
 
-// // // // // const isEmulator = existsSync("./logs/emulator.json");
-
-function ipcSend(channel: string, ...args: any[]) {
-  try {
-    browserWindow.webContents.send(channel, ...args);
-  }
-  catch (e) {
-    return
-  }
-}
-
+function getPathToExec() {
+    if ( process.platform == "darwin" ) { return join(process.resourcesPath, 'adb', 'darwin', 'platform-tools') + '/' }
+    return resolve("adb/" + process.platform + "/platform-tools/");
+} // пусть пока тут
 
 function createWindow(): void {
-  loggerInit();
+  // loggerInit();
 
-  setLogger(logger);
-  firstLoaded = firstLoad();
+  // setLogger(logger);
+  // firstLoaded = firstLoad();
 
   if ( process.platform != "win32" ) {
-    presetAdbConnectorPlatform(process.platform)
+    //presetAdbConnectorPlatform(process.platform)
     if ( process.platform == "darwin" ) {
       try {execSync('xattr -d com.apple.quarantine ' + getPathToExec() + "/adb" + ' || true'); }
-      catch (e) { logger("failed to dequrantine on mac, " + e) }
+      catch (e) { }//logger("failed to dequrantine on mac, " + e) }
     }
     try { execSync("chmod +x " + getPathToExec() + "/adb") }
-    catch (e) { logger("failed to chmod, " + e) }
+    catch (e) { }//logger("failed to chmod, " + e) }
   }
+  
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -67,48 +69,32 @@ function createWindow(): void {
   })
 
   browserWindow = mainWindow;
-  ipcMain.on("settings:firstload", (_e) => {ipcSend("settings:update", firstLoaded)});
-  ipcMain.on("settings:modify", (_e, key, newval) => updateSetting(key, newval));
+  
+  const transport = new TransportMainIPC(browserWindow, ipcMain);
 
-  // logger("network " + getNetworkName(process.platform));
-  // netnetnet((name) => {console.log(name)})
+  const executor = new Executor();
 
-  setupStatusApi((status: string) => {ipcSend("status:update", status)}, logger);
-  setupNetworkUpdater(process.platform, (ssid: string, found: boolean) => { 
-    if ( !found ) { updateStatus("Network not found"); }
-    if ( lastNetwork.ssid != ssid && found ) { logger("! : network : Network changed to: " + ssid); lastNetwork = {ssid: ssid, found: found}; updateStatus("Network changed"); makePingOutOfTurn(); makeTryAutoconnectOutOfTurn(); }
-    lastNetwork = {ssid: ssid, found: found};
-    ipcSend("network:update", ssid, found)
-  }, logger, false);
-  setupPingerUpdater(() => {return settingsExport}, () => {return lastNetwork}, (type_: string, success: boolean, disabled: boolean) => {
-    detectResult[type_] = {success: success, disabled: disabled, ssid: lastNetwork.ssid};
-    if ( type_ == "ch" ) {
-      if ( success && isNewNetwork ) { updateStatus("Device detected") }
-      if ( disabled && isNewNetwork ) { updateStatus("Auto-detection disabled") }
-      if ( !success && !disabled && isNewNetwork ) { updateStatus("Idle") }
-    }
-    ipcSend("pinger:update", detectResult)
-  }, logger, false);
-  setupAdbConnector(process.platform, () => {updateStatus("Connecting")}, () => { if ( !browserWindow.isFocused() ) { new Notification({title: "Connected ADB", silent: true}).show() } updateStatus("Connected")}, () => {updateStatus("Failed")}, () => {return settingsExport.adb_autoconnect.enabled}, () => {return isNewNetwork}, () => {return detectResult.ch}, () => {return lastNetwork.ssid}, makeRecord, logger, false);
-  setupTerminalApi(process.platform, (terminalRecord: TerminalRecord) => {ipcSend("terminalApi:update", terminalRecord)}, logger, new Executor(process.platform, getPathToExec()));
+  const notificationService = new NotificationService(transport, browserWindow);
+  const loggerService = new LoggerService(transport);
+  const manageApiService = new ManageApiService(transport);
+  const terminalService = new TerminalService(transport, executor);
+  const settingsService = new SettingsService(transport);
+  const networkService = new NetworkService(transport);
+  const pingerService = new PingerService(transport, settingsService.settingsStore, networkService.networkStore, networkService.lastNetworkStore);
+  const adbService = new AdbService(transport, executor, settingsService.settingsStore, pingerService.pingerStore, networkService.networkStore);
+  const ftcDashboardService = new FtcDashboardService(transport, settingsService.settingsStore, pingerService.pingerStore);
+  const stateService = new StateService(transport, networkService.networkStore, pingerService.pingerStore, adbService.connectionStateStore, networkService.disconnectedAtThatNetwork);
 
-  ipcMain.on("terminalApi:exec", (_e, stdin: string) => {executeCommand(stdin)})
-  ipcMain.on("terminalApi:load", (_e) => {ipcSend("terminalApi:before", terminalRecords)})
+  const tickServices: Array<Service> = [networkService, pingerService, adbService, ftcDashboardService];
 
-  setCallbackUpdate((log: string) => {ipcSend("logs:update", log)});
-  ipcMain.on("logs:load", (_e) => {ipcSend("logs:before", logsRecords)})
+  function tickAll() {
+    tickServices.forEach(service => {
+      service.tick();
+    });
+    setTimeout(tickAll, 300);
+  }
 
-  ipcMain.on("adb:connect", (_e) => {updateStatus("Connecting"); connect((isSuccess: boolean) => {
-    if ( isSuccess ) { updateStatus("Connected") }
-    else { updateStatus("Failed") }
-    ipcSend("adb:connect:result", isSuccess)
-  })})
-  ipcMain.on("adb:disconnect", (_e) => {disconnect((isSuccess: boolean) => {
-    if ( isSuccess ) { updateStatus("Disconnected") }
-    else { updateStatus("Failed") }
-    ipcSend("adb:disconnect:result", isSuccess)
-  })})
-
+  tickAll();
   
 
   // mainWindow.on('ready-to-show', () => {
@@ -151,18 +137,7 @@ app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
   
 
-  // let ch = exec("adb disconnect 192.168.43.1:5555");
-  // ch.stdout?.on("data", m => console.log(m))
-  // ch.stderr?.on("data", m => console.log("err " + m))
-  // ch.on("close", (m, s) => {console.log(m)})
-  
 
-  
-
-  logger("App ready1");
-  logger("App ready2");
-  logger("App ready3");
-  logger("App ready4");
 
   createWindow()
 

@@ -34,6 +34,8 @@
     "@electron/fuses": "^1.8.0",
     "@sveltejs/vite-plugin-svelte": "^6.1.0",
     "@types/node": "^22.16.5",
+    "axios": "^1.18.1",
+    "bufferutil": "^4.1.0",
     "electron": "^37.2.3",
     "electron-builder": "^26.0.12",
     "electron-log": "^5.4.3",
@@ -44,6 +46,8 @@
     "svelte-check": "^4.3.0",
     "svelte-toggle": "^4.0.1",
     "typescript": "^5.8.3",
-    "vite": "^7.0.5"
+    "utf-8-validate": "^6.0.6",
+    "vite": "^7.0.5",
+    "ws": "^8.21.1"
   }
 }

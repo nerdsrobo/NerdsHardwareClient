@@ -1,11 +1,9 @@
 <script lang="ts">
+    import type { APIs } from "../apis.svelte";
     import Setting from "../components/Setting.svelte";
 
-    const props: { goto: Function, modifySetting: Function, firstLoaded: any } = $props();
-
-    function modifySetting(settingName: string, newval: boolean) {
-        props.modifySetting(settingName, newval);
-    }
+    const props: { goto: Function, apis: APIs } = $props();
+    const apis = props.apis;
 
 </script>
 
@@ -21,20 +19,49 @@
     <div class="settings-area">
         <div class="left"></div>
         <div class="setting-s">
-            <Setting modify={e => modifySetting("autodetect", e)} label="Auto-detection" subtextOn="The app will try to find the Control Hub and/or FTC Dashboard on the network" subtextOff="The app will not try to find the Control Hub and/or FTC Dashboard on the network" isToggled={props.firstLoaded.autodetect.enabled}></Setting>
-            <Setting modify={e => modifySetting("autodetect_rc", e)} label='Auto-detection only on "*-RC"' subtextOn='Auto-detection feature will only work on Wi-Fi networks with the "*-RC" pattern in name' subtextOff="Auto-detection feature will work with all Wi-Fi networks" isToggled={props.firstLoaded.autodetect_rc.enabled}></Setting>
-            <Setting modify={e => modifySetting("autodetect_ch", e)} label='Auto-detect the Control Hub' subtextOn='The app will make requests to 192.168.43.1:8080 to find the Control Hub' subtextOff="The app will not search for the Control Hub" isToggled={props.firstLoaded.autodetect_ch.enabled}></Setting>
-            <Setting modify={e => modifySetting("autodetect_dash", e)} label='Auto-detect the FTC Dashboard' subtextOn='The app will make requests to 192.168.43.1:8080/dash to find the FTC Dashboard' subtextOff="The app will not search for the FTC Dashboard" isToggled={props.firstLoaded.autodetect_dash.enabled}></Setting>
-            <Setting modify={e => modifySetting("display_dash", e)} label='Display "Dashboard" on the left bar' subtextOn='"Dashboard" will be displayed on the left bar' subtextOff='"Dashboard" will not be displayed on the left bar' isToggled={props.firstLoaded.display_dash.enabled}></Setting>
+            <Setting modify={e => {apis.loggerApi.verbose("setting updated: autodetect - " + e); apis.settingsApi.updateSetting("autodetect", e)}}
+                label="Auto-detection"
+                subtextOn="The app will try to find the Control Hub and/or FTC Dashboard on the network"
+                subtextOff="The app will not try to find the Control Hub and/or FTC Dashboard on the network"
+                isToggled={apis.settingsApi.settings.autodetect}></Setting>
+            <Setting modify={e => {apis.loggerApi.verbose("setting updated: autodetect_on_rc - " + e); apis.settingsApi.updateSetting("autodetect_on_rc", e)}}
+                label='Auto-detection only on "*-RC"'
+                subtextOn='Auto-detection feature will only work on Wi-Fi networks with the "*-RC" pattern in name'
+                subtextOff="Auto-detection feature will work with all Wi-Fi networks"
+                isToggled={apis.settingsApi.settings.autodetect_on_rc}></Setting>
+            <Setting modify={e => {apis.loggerApi.verbose("setting updated: autodetect_ch - " + e); apis.settingsApi.updateSetting("autodetect_ch", e)}}
+                label='Auto-detect the Control Hub'
+                subtextOn='The app will make requests to 192.168.43.1:8080 to find the Control Hub'
+                subtextOff="The app will not search for the Control Hub"
+                isToggled={apis.settingsApi.settings.autodetect_ch}></Setting>
+            <Setting modify={e => {apis.loggerApi.verbose("setting updated: autodetect_dash - " + e); apis.settingsApi.updateSetting("autodetect_dash", e)}}
+                label='Auto-detect the FTC Dashboard'
+                subtextOn='The app will make requests to 192.168.43.1:8080/dash to find the FTC Dashboard'
+                subtextOff="The app will not search for the FTC Dashboard"
+                isToggled={apis.settingsApi.settings.autodetect_dash}></Setting>
+            <Setting modify={e => {apis.loggerApi.verbose("setting updated: display_dash - " + e); apis.settingsApi.updateSetting("display_dash", e)}}
+                label='Display "Dashboard" on the left bar'
+                subtextOn='"Dashboard" will be displayed on the left bar'
+                subtextOff='"Dashboard" will not be displayed on the left bar'
+                isToggled={apis.settingsApi.settings.display_dash}></Setting>
+            <Setting modify={e => {apis.loggerApi.verbose("setting updated: use_dashboard_on_main_page - " + e); apis.settingsApi.updateSetting("use_dashboard_on_main_page", e)}}
+                label='Display OpMode and Gamepad using "FTC Dashboard" on the Main page'
+                subtextOn='You can use OpMode and Gamepad from "FTC Dashbord" on the Main page'
+                subtextOff='OpMode and Gamepad will not be displayed on the Main page'
+                isToggled={apis.settingsApi.settings.use_dashboard_on_main_page}></Setting>
             Software by team 31900 Nerds Ignore Napless<br>
             Not affiliated with REV Robotics or other hardwares vendors
         </div>
         <div class="right"></div>
     </div>
-    
 </div>
 
 <style lang="scss">
+    $dark-one: #1E1E2A;
+    $dark-two: #28283D;
+    $background: #080809;
+    $on-color: #28691B;
+    $sub-text: #BDBDBD;
     .m {
         color: white;
         .upper {
@@ -52,7 +79,6 @@
                 padding-right: 10px;
                 padding-left: 10px;
             }
-            
             .title {
                 display: flex;
                 justify-content: center;
@@ -68,8 +94,7 @@
                 flex-direction: column;
                 gap: 20px;
             }
-        }
-        
+        }   
     }
     .cursor-pointer {
         cursor: pointer;

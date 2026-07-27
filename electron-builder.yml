@@ -40,7 +40,9 @@ linux:
     - deb
     - tar.gz
   category: Utility
-  extraFiles: adb/linux/**
+  extraFiles:
+    - adb/linux/**
+    - run_steam_nhc.sh
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
