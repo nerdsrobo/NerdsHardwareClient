@@ -1,7 +1,7 @@
 {
   "name": "nerds-hardware-client",
-  "version": "0.1.1",
-  "description": "An Electron application with Svelte and TypeScript",
+  "version": "1.0.0",
+  "description": "An application for connecting to FTC hardware using Android Debug Bridge",
   "main": "./out-web/main/index.js",
   "author": "nin31900 <nerdsrobo@gmail.com> (https://nerdsrobo.ru)",
   "homepage": "https://nerdsrobo.ru",
