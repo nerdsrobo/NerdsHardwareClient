@@ -60,13 +60,32 @@ export class NetworkService extends Service {
     }
 
     getNetworkLinux(callback: (networkInfo: NetworkInfo) => void) {
-        exec("iwgetid -r", (_err, stdout, _stderr) => {
-            // eventBus.verbose("network linux cmd result - stdout: " + stdout + " stderr: " + stderr);
+        // exec("iwgetid -r", (_err, stdout, _stderr) => {
+        //     // eventBus.verbose("network linux cmd result - stdout: " + stdout + " stderr: " + stderr);
+        //     if ( stdout ) {
+        //         callback({ssid: stdout, found: true});
+        //     }
+        //     else {
+        //         eventBus.verbose("network not found");
+        //         callback({ssid: '', found: false});
+        //     }
+        // })
+        exec("nmcli -t -f active,ssid dev wifi", (_err, stdout, _stderr) => {
             if ( stdout ) {
-                callback({ssid: stdout, found: true});
+                let found = false;
+                stdout.split("\n").forEach(line => {
+                    if ( line.split(":")[0] == "yes" ) {
+                        found = true;
+                        callback({
+                            ssid: line.split(":")[1].trim(),
+                            found: true
+                        })
+                    }
+                })
+                if ( !found ) { callback({ssid: '', found: false}) }
             }
             else {
-                eventBus.verbose("network not found");
+                eventBus.verbose("seems like nmcli responds error");
                 callback({ssid: '', found: false});
             }
         })
