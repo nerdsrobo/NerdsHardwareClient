@@ -42,7 +42,7 @@ function createWindow(): void {
 
   if ( process.platform != "win32" ) {
     //presetAdbConnectorPlatform(process.platform)
-    if ( process.platform == "darwin" ) {
+    if ( process.platform == "darwin" && !is.dev ) {
       try {execSync('xattr -d com.apple.quarantine ' + getPathToExec() + "/adb" + ' || true'); }
       catch (e) { }//logger("failed to dequrantine on mac, " + e) }
     }
