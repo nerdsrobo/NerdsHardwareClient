@@ -49,7 +49,7 @@ export class FtcDashboardApi extends Api {
         this.gamepadService.gamepads.sub((gamepads) => {this.gamepadsUpdated($state.snapshot(gamepads))})        
 
         this.loggerApi = loggerApi;
-        pingerApi.pingerInfo.sub(pingerInfo => {this.pingerInfo = pingerInfo; this.gamepadService.ping = pingerInfo.dash.found; this.checkIsGamepadServiceAlive(); })
+        pingerApi.pingerInfo.sub(pingerInfo => {this.pingerInfo = pingerInfo; this.checkIsGamepadServiceAlive(); })
     }
 
     checkIsGamepadServiceAlive() {
