@@ -12,11 +12,10 @@
 ---
 
 **Linux WiFi detection workability:**
-To make WiFi detection work on linux, download `wireless-tools`. Install it, using your package manager, e. g. on Ubuntu: `sudo apt install wireless-tools`, on Arch: `sudo pacman -S wireless-tools`, etc.
+To make WiFi detection work on linux, make sure `nmcli` installed
 
 **Known bugs:**
  - On MacOS Wi-Fi detection doesnt work
- - Can't manage password of Control Hub at manage tab
 
 ## Development
 
@@ -34,7 +33,7 @@ Installs all dependencies
 ```bash
 npm run dev
 ```
-Runs an app with hot reload on */renderer* part. To update the electron */main* part, rewrite cmd
+Runs an app with hot reload on */renderer* part. To update the electron */main* part, rewrite `npm run dev`
 
 ### Build
 
