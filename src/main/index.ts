@@ -39,16 +39,6 @@ function createWindow(): void {
 
   // setLogger(logger);
   // firstLoaded = firstLoad();
-
-  if ( process.platform != "win32" ) {
-    //presetAdbConnectorPlatform(process.platform)
-    if ( process.platform == "darwin" && !is.dev ) {
-      try {execSync('xattr -d com.apple.quarantine ' + getPathToExec() + "/adb" + ' || true'); }
-      catch (e) { }//logger("failed to dequrantine on mac, " + e) }
-    }
-    try { execSync("chmod +x \"" + getPathToExec() + "/adb\"") }
-    catch (e) { }//logger("failed to chmod, " + e) }
-  }
   
 
   // Create the browser window.
@@ -92,6 +82,18 @@ function createWindow(): void {
       service.tick();
     });
     setTimeout(tickAll, 300);
+  }
+
+  loggerService.addLog(`adb path on platform: ${getPathToExec()}`, true)
+
+  if ( process.platform != "win32" ) {
+    //presetAdbConnectorPlatform(process.platform)
+    if ( process.platform == "darwin" && !is.dev ) {
+      try {execSync('xattr -d com.apple.quarantine ' + getPathToExec() + "/adb" + ' || true'); }
+      catch (e) { loggerService.addLog("failed to dequrantine on mac, " + e, false) }
+    }
+    try { execSync("chmod +x \"" + getPathToExec() + "/adb\"") }
+    catch (e) { loggerService.addLog("failed to chmod, " + e, false) }
   }
 
   tickAll();
