@@ -32,12 +32,12 @@ export class SettingsService extends Service {
     }
  
     updateSetting(key: string, val: any) {
-        eventBus.verbose("setting updated: " + key + " - " + val);
         this.settingsStore.state[key] = val;
-        if ( key == "autodetect" ) { this.settingsStore.state.autodetect_ch = false; this.settingsStore.state.autodetect_dash = false}
-        else if ( key == "autodetect_ch" || key == "autodetect_dash" ) { this.settingsStore.state.autodetect = true; }
+        if ( key == "autodetect" && val == false ) { this.settingsStore.state.autodetect_ch = false; this.settingsStore.state.autodetect_dash = false}
+        else if ( (key == "autodetect_ch" || key == "autodetect_dash") && val == true ) { this.settingsStore.state.autodetect = true; }
         this.settingsStore.set(this.settingsStore.state);
         settings.set(this.settingsStore.state);
+        eventBus.verbose(`settings updated: ${JSON.stringify(this.settingsStore.state)}`)
     }
 
     tick(): void { }
