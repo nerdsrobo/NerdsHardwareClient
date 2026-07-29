@@ -1,9 +1,15 @@
+import { is } from "@electron-toolkit/utils";
 import { exec, ExecException } from "child_process";
-import path from "path";
+import { join, resolve } from "path";
 import { platform } from "process";
 
+export function getPathToAdbExec() {
+    if ( process.platform == "darwin" && !is.dev ) { return join(process.resourcesPath, 'adb', 'darwin', 'platform-tools') + '/' }
+    return resolve("adb/" + process.platform + "/platform-tools/");
+}
+
 export class Executor {
-    adbPath: string = path.resolve("adb", platform, "platform-tools");
+    adbPath: string = getPathToAdbExec();
     public execute(command: string, callback?: ((error: ExecException | null, stdout: string, stderr: string) => void) | undefined) {
         return exec(command, {cwd: this.adbPath}, callback);
     }

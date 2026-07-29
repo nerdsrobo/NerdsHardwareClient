@@ -1,5 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join, resolve } from 'path'
+import { join } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { execSync } from 'child_process'
@@ -16,6 +16,7 @@ import { Executor } from './execShell'
 import { NotificationService } from './services/notificationService'
 import { ManageApiService } from './services/manageApiService'
 import { FtcDashboardService } from './services/ftcDashboardService'
+import { getPathToAdbExec } from './execShell'
 
 let browserWindow: BrowserWindow;
 let mainWindow;
@@ -28,11 +29,6 @@ let mainWindow;
 //     return
 //   }
 // }
-
-function getPathToExec() {
-    if ( process.platform == "darwin" && !is.dev ) { return join(process.resourcesPath, 'adb', 'darwin', 'platform-tools') + '/' }
-    return resolve("adb/" + process.platform + "/platform-tools/");
-} // пусть пока тут
 
 function createWindow(): void {
   // loggerInit();
@@ -84,15 +80,20 @@ function createWindow(): void {
     setTimeout(tickAll, 300);
   }
 
-  loggerService.addLog(`adb path on platform: ${getPathToExec()}`, true)
+  loggerService.addLog(`adb path on platform: ${getPathToAdbExec()}`, true)
 
   if ( process.platform != "win32" ) {
     //presetAdbConnectorPlatform(process.platform)
     if ( process.platform == "darwin" && !is.dev ) {
-      try {execSync('xattr -d com.apple.quarantine ' + getPathToExec() + "/adb" + ' || true'); }
+      try {
+        execSync('xattr -d com.apple.quarantine "' + getPathToAdbExec() + "/adb\"" + ' || true');
+        loggerService.addLog("dequarantine on mac success", true);
+      }
       catch (e) { loggerService.addLog("failed to dequrantine on mac, " + e, false) }
     }
-    try { execSync("chmod +x \"" + getPathToExec() + "/adb\"") }
+    try { execSync("chmod +x \"" + getPathToAdbExec() + "/adb\"");
+        loggerService.addLog("chmod +x success", true);
+      }
     catch (e) { loggerService.addLog("failed to chmod, " + e, false) }
   }
 
