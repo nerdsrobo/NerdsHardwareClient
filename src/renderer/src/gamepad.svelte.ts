@@ -18,7 +18,6 @@ export class GamepadService {
         let gm: Array<GamepadState | null> = [];
         let gmIds: Array<string> = [];
         let gmConnected = false;
-        console.log(navigator.getGamepads())
         navigator.getGamepads().forEach(gamepad => {
             if ( gamepad ) {
                 gmConnected = true;
