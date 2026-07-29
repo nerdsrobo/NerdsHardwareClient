@@ -30,7 +30,7 @@ let mainWindow;
 // }
 
 function getPathToExec() {
-    if ( process.platform == "darwin" ) { return join(process.resourcesPath, 'adb', 'darwin', 'platform-tools') + '/' }
+    if ( process.platform == "darwin" && !is.dev ) { return join(process.resourcesPath, 'adb', 'darwin', 'platform-tools') + '/' }
     return resolve("adb/" + process.platform + "/platform-tools/");
 } // пусть пока тут
 
@@ -46,7 +46,7 @@ function createWindow(): void {
       try {execSync('xattr -d com.apple.quarantine ' + getPathToExec() + "/adb" + ' || true'); }
       catch (e) { }//logger("failed to dequrantine on mac, " + e) }
     }
-    try { execSync("chmod +x " + getPathToExec() + "/adb") }
+    try { execSync("chmod +x \"" + getPathToExec() + "/adb\"") }
     catch (e) { }//logger("failed to chmod, " + e) }
   }
   
