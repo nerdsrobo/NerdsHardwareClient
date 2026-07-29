@@ -130,7 +130,8 @@
                 {#if tabsManager.tabs.changeKeyboardGamepadEmulatorMapping?.show}
                     <div style:transform={"translate(" + tabsManager.tabs.changeKeyboardGamepadEmulatorMapping?.spring.current + "px, 0)"} style:z-index={tabsManager.tabs.changeKeyboardGamepadEmulatorMapping?.zOrder} class="tab"><ChangeKeyboardGamepadEmulatorMapping apis={apis}/></div>
                 {/if}
-                {#if !tabsManager.tabs.dashboard?.show && !tabsManager.tabs.changeKeyboardGamepadEmulatorMapping?.show && apis.settingsApi.settings.use_dashboard_on_main_page && apis.pingerApi.pingerInfo.state.dash.found }
+                <!-- {#if !tabsManager.tabs.dashboard?.show && !tabsManager.tabs.changeKeyboardGamepadEmulatorMapping?.show && apis.settingsApi.settings.use_dashboard_on_main_page && apis.pingerApi.pingerInfo.state.dash.found } -->
+                {#if !tabsManager.tabs.dashboard?.show && !tabsManager.tabs.changeKeyboardGamepadEmulatorMapping?.show }
                     <div class="tab"><PartialDashboard apis={apis} /></div>
                 {/if}
             </div>
